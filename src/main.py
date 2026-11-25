@@ -117,6 +117,14 @@ def main():
     Запуск поиска решений дифференциального уравнения и построения графиков
     :return: None
     """
+    Rich.simple_log("Метод Рунге-Кутта 2-го порядка")
+
+    Rich.debug_log("Дифференциальное уравнение: y' = (1/8)*sin(x + 1) - 2*(x - 2)*y")
+    Rich.debug_log("Отрезок интегрирования: [1.0; 6.0]")
+    Rich.debug_log("Начальное условие: y(1.0) = 10.0")
+    Rich.debug_log(f"Начальный шаг: {h0}")
+    Rich.debug_log("Заданная точность: 0,001")
+
     xs_auto, ys_auto, h_final = solve_auto_step(x0, b, y0, h0, eps)
 
     N = len(xs_auto) - 1
@@ -142,6 +150,20 @@ def main():
     max_err_fixed = np.max(np.abs(ys_fixed - ys_exact))
     Rich.success_log(f"Максимальная погрешность (Авто): {max_err_auto:.2e}")
     Rich.success_log(f"Максимальная погрешность (Пост.): {max_err_fixed:.2e}")
+
+    y_final_auto = ys_auto[-1]
+    y_final_fixed = ys_fixed[-1]
+    y_final_exact = ys_exact[-1]
+
+    err_final_auto = abs(y_final_auto - y_final_exact)
+    err_final_fixed = abs(y_final_fixed - y_final_exact)
+
+    Rich.debug_log("Итоговый ответ в конечной точке")
+    Rich.simple_log(f"Конечная точка: x = {b}")
+
+    Rich.success_log(f"Автоматический шаг: y({b}) ≈ {y_final_auto:.6f} (погрешность: {err_final_auto:.2e})")
+    Rich.success_log(f"Постоянный шаг:    y({b}) ≈ {y_final_fixed:.6f} (погрешность: {err_final_fixed:.2e})")
+    Rich.simple_log(f"Эталонное решение: y({b}) = {y_final_exact:.6f}")
 
     return xs_auto, ys_auto, xs_fixed, ys_fixed
 
